@@ -10,6 +10,7 @@ struct RootView: View {
     @State private var cafesModel: CafesViewModel
     @State private var brewModel: BrewViewModel
     @State private var accountModel: AccountViewModel
+    @State private var shopModel: ShopViewModel
     @State private var location = LocationProvider()
     @State private var pendingRoute: HomeRoute?
 
@@ -21,6 +22,7 @@ struct RootView: View {
         _cafesModel = State(initialValue: CafesViewModel(service: services.cafes))
         _brewModel = State(initialValue: BrewViewModel(service: services.brew, machine: machine))
         _accountModel = State(initialValue: AccountViewModel(service: services.account, machine: machine))
+        _shopModel = State(initialValue: ShopViewModel(service: services.shop, bag: BagStore()))
     }
 
     var body: some View {
@@ -30,12 +32,12 @@ struct RootView: View {
                 HomeView(model: homeModel) { route in handle(route) }
             case .brew:
                 BrewView(model: brewModel)
+            case .shop:
+                ShopView(model: shopModel)
             case .cafes:
                 CafesView(model: cafesModel, location: location)
             case .account:
                 AccountView(model: accountModel)
-            default:
-                ComingSoonView(title: selection.title, icon: selection.icon)
             }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -45,10 +47,12 @@ struct RootView: View {
                         .padding(.bottom, 10)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
-                BrandTabBar(selection: $selection)
+                BrandTabBar(selection: $selection, badges: [.shop: shopModel.bag.itemCount])
             }
             .animation(Motion.quint, value: accountModel.toast)
         }
+        // Keep the tab bar anchored to the bottom like a system tab bar when the keyboard shows.
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .overlay(alignment: .top) { StatusBarScrim() }
         .background(Color.paper)
         .tint(Color.terracotta)
@@ -63,6 +67,7 @@ struct RootView: View {
         switch route {
         case .quickAction(.cafes): selection = .cafes
         case .quickAction(.brewMenu): selection = .brew
+        case .quickAction(.reorder), .allPicks: selection = .shop
         case .adjustBrew:
             selection = .brew
             brewModel.requestUsualCustomizer()

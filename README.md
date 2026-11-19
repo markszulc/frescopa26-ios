@@ -33,6 +33,28 @@ open FrescopaAtelier.xcodeproj
 6. `TastePicksRail` (+ `SectionHeader`, `ProductPickCard`, `ProductArtwork`)
 7. `FlavourDNACard`
 
+### Shop tab → live Adobe Commerce catalog
+
+The Shop reads the real Fréscopa catalog from the same Adobe Commerce (Catalog Service) GraphQL
+endpoint the frescopacoffee.com storefront uses, with the store headers from its public `/config.json`:
+
+| Query | Used for |
+|---|---|
+| `categories { name urlPath }` | Category chips (direct children of `frescopa/`) |
+| `productSearch(phrase, filter, sort, page_size, current_page)` | Grid, search, category filter, sort, infinite scroll |
+| `products(skus:)` | Product page (description, attributes, finish options) and the featured Atelier |
+
+- `GraphQLClient` — small typed GraphQL-over-HTTP client
+- `CommerceShopService` — queries + DTOs for the `ProductView` union; `MockShopService` for previews/tests
+- Images come from AEM asset delivery (`…/as/{sku}.jpg?width=`); products without imagery get branded placeholders
+- Prices decode via their decimal string so cents are exact
+- The bag (`BagStore`) is on-device for now. Commerce cart mutations (`createGuestCart`,
+  `addProductsToCart`) would write to the live store, so checkout isn't wired yet.
+- Run `LiveCommerceTests` with `LIVE_COMMERCE=1` in the test environment to hit the real endpoint.
+
+Components: `ShopHeader` (+ search, `BagButton`), `FeaturedProductCard`, `CategorySortBar`, `ProductTile`,
+`ProductImage`, `FinishSwatch`, `QuantityStepper`; screens `ShopView`, `ProductDetailView`, `BagView`.
+
 ### Brew tab → components
 
 1. `BrewHeader` (+ `MachineStatusPill`) — live status and water/bean levels

@@ -30,6 +30,8 @@ enum AppTab: String, CaseIterable, Identifiable {
 /// burgundy for the selected tab and ink-soft for the rest.
 struct BrandTabBar: View {
     @Binding var selection: AppTab
+    /// Optional count badges per tab (e.g. items in the bag on Shop).
+    var badges: [AppTab: Int] = [:]
 
     var body: some View {
         HStack(spacing: 0) {
@@ -41,6 +43,19 @@ struct BrandTabBar: View {
                     VStack(spacing: 3) {
                         BrandIconView(icon: tab.icon, size: 24, weight: isSelected ? .medium : .regular)
                             .symbolVariant(isSelected ? .fill : .none)
+                            .overlay(alignment: .topTrailing) {
+                                if let count = badges[tab], count > 0 {
+                                    Text("\(count)")
+                                        .font(BrandFont.body(10, weight: .bold, relativeTo: .caption2))
+                                        .foregroundStyle(Color.cream)
+                                        .frame(minWidth: 17, minHeight: 17)
+                                        .background(Capsule().fill(Color.terracotta))
+                                        .offset(x: 9, y: -5)
+                                        .contentTransition(.numericText())
+                                        .transition(.scale.combined(with: .opacity))
+                                }
+                            }
+                            .animation(Motion.quint, value: badges[tab])
                         Text(tab.title)
                             .textStyle(.tabLabel)
                     }
@@ -51,6 +66,7 @@ struct BrandTabBar: View {
                 .buttonStyle(.pressable)
                 .accessibilityAddTraits(isSelected ? [.isSelected] : [])
                 .accessibilityLabel(tab.title)
+                .accessibilityValue(badges[tab].map { $0 > 0 ? "\($0) items" : "" } ?? "")
             }
         }
         .padding(.horizontal, 12)

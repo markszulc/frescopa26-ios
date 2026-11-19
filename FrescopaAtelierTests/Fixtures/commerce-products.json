@@ -1,0 +1,171 @@
+{
+ "data": {
+  "products": [
+   {
+    "__typename": "SimpleProductView",
+    "sku": "COF-MB",
+    "name": "Morning Blend",
+    "shortDescription": "<p>A smooth, full-bodied blend to ease you into the day. Naturally balanced with a long, satisfying finish.</p>",
+    "description": "<p>Our most loved house blend. Multi-origin, roasted in small batches and ground to order, so it tastes the same lovely way morning after morning. Easy in any machine.</p>",
+    "inStock": true,
+    "urlKey": "morning-blend",
+    "images": [
+     {
+      "label": "A bag of Morning Blend coffee sitting on a counter",
+      "url": "https://delivery-p137825-e1511252.adobeaemcloud.com/adobe/assets/urn:aaid:aem:5b5a4924-19ea-49f8-8319-3206652442e6",
+      "roles": [
+       "image",
+       "small_image",
+       "thumbnail"
+      ]
+     }
+    ],
+    "attributes": [
+     {
+      "name": "ac_attribute_set",
+      "label": "AC Attribute Set",
+      "value": "Default",
+      "roles": [
+       "visible_in_pdp"
+      ]
+     },
+     {
+      "name": "ac_inventory",
+      "label": "AC Inventory Data",
+      "value": {
+       "manageStock": true,
+       "qtyIncrements": 1,
+       "enableQtyIncrements": false,
+       "cartMaxQty": 10000,
+       "backorders": "no",
+       "cartMinQty": 1
+      },
+      "roles": [
+       "visible_in_pdp"
+      ]
+     },
+     {
+      "name": "ac_tax_class",
+      "label": "AC Tax Class",
+      "value": "Taxable Goods",
+      "roles": [
+       "visible_in_pdp"
+      ]
+     },
+     {
+      "name": "coffee_format",
+      "label": "Coffee Format",
+      "value": "Ground",
+      "roles": []
+     },
+     {
+      "name": "cost",
+      "label": "Cost",
+      "value": "",
+      "roles": []
+     },
+     {
+      "name": "finish",
+      "label": "Finish",
+      "value": "",
+      "roles": []
+     }
+    ],
+    "price": {
+     "final": {
+      "amount": {
+       "value": 10.0,
+       "currency": "USD"
+      }
+     }
+    }
+   },
+   {
+    "__typename": "ComplexProductView",
+    "sku": "CSM6001",
+    "name": "The Atelier",
+    "shortDescription": "The flagship bean-to-cup machine that learns your taste, reads your day and reorders your beans.",
+    "description": "<p>The first Fréscopa machine with a feel for your mornings. The Atelier learns what you love, reads the shape of your day, and quietly takes care of the rest. A ring of sensors tastes every cup (grind, flow, strength, temperature), builds a flavour DNA for each person in the house, reads the time, calendar and weather, then warms up, pours and reorders beans on its own.</p><ul><li>Learns your tas",
+    "inStock": true,
+    "urlKey": "the-atelier",
+    "images": [],
+    "attributes": [
+     {
+      "name": "ac_attribute_set",
+      "label": "AC Attribute Set",
+      "value": "Default",
+      "roles": [
+       "visible_in_pdp"
+      ]
+     },
+     {
+      "name": "ac_inventory",
+      "label": "AC Inventory Data",
+      "value": {
+       "manageStock": true,
+       "qtyIncrements": 1,
+       "enableQtyIncrements": false,
+       "cartMaxQty": 10000,
+       "backorders": "no",
+       "cartMinQty": 1
+      },
+      "roles": [
+       "visible_in_pdp"
+      ]
+     },
+     {
+      "name": "ac_tax_class",
+      "label": "AC Tax Class",
+      "value": "Taxable Goods",
+      "roles": [
+       "visible_in_pdp"
+      ]
+     },
+     {
+      "name": "weight",
+      "label": "Weight",
+      "value": 9.8,
+      "roles": [
+       "visible_in_pdp"
+      ]
+     }
+    ],
+    "priceRange": {
+     "minimum": {
+      "final": {
+       "amount": {
+        "value": 2199.0,
+        "currency": "USD"
+       }
+      }
+     }
+    },
+    "options": [
+     {
+      "id": "finish",
+      "title": "Finish",
+      "required": false,
+      "multi": false,
+      "values": [
+       {
+        "id": "Y29uZmlndXJhYmxlLzIxNC8xNw==",
+        "title": "Cream",
+        "inStock": true
+       },
+       {
+        "id": "Y29uZmlndXJhYmxlLzIxNC8xOA==",
+        "title": "Charcoal",
+        "inStock": true
+       },
+       {
+        "id": "Y29uZmlndXJhYmxlLzIxNC8xOQ==",
+        "title": "Terracotta",
+        "inStock": true
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}
