@@ -1,0 +1,52 @@
+name: FrescopaAtelier
+options:
+  bundleIdPrefix: com.frescopa
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+targets:
+  FrescopaAtelier:
+    type: application
+    platform: iOS
+    sources:
+      - path: FrescopaAtelier
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.frescopa.atelier
+        PRODUCT_NAME: FrescopaAtelier
+        TARGETED_DEVICE_FAMILY: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Fréscopa
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_UIUserInterfaceStyle: Light
+        INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: "Fréscopa uses your location to show the cafés nearest to you."
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_PREVIEWS: YES
+        SWIFT_STRICT_CONCURRENCY: complete
+  FrescopaAtelierTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: FrescopaAtelierTests
+    dependencies:
+      - target: FrescopaAtelier
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/FrescopaAtelier.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/FrescopaAtelier
+        BUNDLE_LOADER: $(TEST_HOST)
+schemes:
+  FrescopaAtelier:
+    build:
+      targets:
+        FrescopaAtelier: all
+    test:
+      targets:
+        - FrescopaAtelierTests
