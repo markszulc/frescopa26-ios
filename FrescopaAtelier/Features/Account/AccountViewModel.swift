@@ -108,12 +108,11 @@ final class AccountViewModel {
 
     // MARK: Machine care
 
-    func startCare(_ task: CareTask) {
-        guard !machine.isBrewing else {
-            showToast("The Atelier is brewing. Start \(task.title.lowercased()) once your cup is ready.")
-            return
-        }
-        showToast("\(task.title) started on The Atelier. Follow the steps on the machine.")
+    /// The account's machine, with live care state from the shared controller.
+    func liveMachine(_ machine: OwnedMachine) -> OwnedMachine {
+        var copy = machine
+        copy.care = self.machine.care
+        return copy
     }
 
     // MARK: Session

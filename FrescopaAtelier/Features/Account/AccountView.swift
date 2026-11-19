@@ -7,6 +7,9 @@ struct AccountView: View {
 
     @State private var editsSubscription = false
     @State private var choosesPause = false
+    /// Care routine to open in the machine-care sheet.
+    @State private var careTask: CareTaskRequest?
+    var onOrderBeans: () -> Void = {}
 
     var body: some View {
         NavigationStack {
@@ -54,6 +57,9 @@ struct AccountView: View {
                 }
             }
         }
+        .sheet(item: $careTask) { request in
+            MachineCareView(machine: model.machine, startWith: request.taskID, onOrderBeans: onOrderBeans)
+        }
         .confirmationDialog("Pause deliveries for…", isPresented: $choosesPause, titleVisibility: .visible) {
             ForEach([2, 4, 8], id: \.self) { weeks in
                 Button("\(weeks) weeks") { Task { await model.pause(weeks: weeks) } }
@@ -85,7 +91,9 @@ struct AccountView: View {
             .padding(.top, 28)
             .reveal(delay: 0.12)
 
-            MachineCareSection(machine: overview.machine, onStartCare: model.startCare(_:))
+            MachineCareSection(machine: model.liveMachine(overview.machine)) { task in
+                careTask = CareTaskRequest(taskID: task.id)
+            }
                 .padding(.top, 28)
 
             TasteHistoryChart(weeks: overview.tasteHistory)
@@ -134,4 +142,9 @@ private struct SignedOutView: View {
 #Preview {
     AccountView(model: AccountViewModel(service: MockAccountService(),
                                         machine: MachineController(service: MockBrewService())))
+}
+
+private struct CareTaskRequest: Identifiable {
+    let id = UUID()
+    let taskID: CareTask.ID
 }

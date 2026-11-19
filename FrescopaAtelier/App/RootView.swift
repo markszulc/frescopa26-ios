@@ -13,6 +13,7 @@ struct RootView: View {
     @State private var shopModel: ShopViewModel
     @State private var location = LocationProvider()
     @State private var pendingRoute: HomeRoute?
+    @State private var showsCare = false
 
     init(services: AppServices) {
         self.services = services
@@ -37,7 +38,7 @@ struct RootView: View {
             case .cafes:
                 CafesView(model: cafesModel, location: location)
             case .account:
-                AccountView(model: accountModel)
+                AccountView(model: accountModel) { selection = .shop }
             }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -56,6 +57,9 @@ struct RootView: View {
         .overlay(alignment: .top) { StatusBarScrim() }
         .background(Color.paper)
         .tint(Color.terracotta)
+        .sheet(isPresented: $showsCare) {
+            MachineCareView(machine: homeModel.machine) { selection = .shop }
+        }
         .sheet(item: $pendingRoute) { route in
             ComingSoonView(title: route.title)
                 .presentationDetents([.medium])
@@ -68,6 +72,7 @@ struct RootView: View {
         case .quickAction(.cafes): selection = .cafes
         case .quickAction(.brewMenu): selection = .brew
         case .quickAction(.reorder), .allPicks: selection = .shop
+        case .quickAction(.care): showsCare = true
         case .adjustBrew:
             selection = .brew
             brewModel.requestUsualCustomizer()

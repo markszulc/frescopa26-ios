@@ -33,6 +33,13 @@ open FrescopaAtelier.xcodeproj
 6. `TastePicksRail` (+ `SectionHeader`, `ProductPickCard`, `ProductArtwork`)
 7. `FlavourDNACard`
 
+### Machine care (Home → Care, Account → Start descale)
+
+- `MachineCareView` — health ring, supplies (water/beans/filter with actions), care schedule, tips
+- `CareGuideView` + `CareGuideModel` — step-by-step descale, filter and milk-rinse routines; machine
+  cycles are simulated and time-scaled. Completing one resets the reminder on `MachineController.care`,
+  which Account's "Your machine" section also reads.
+
 ### Shop tab → live Adobe Commerce catalog
 
 The Shop reads the real Fréscopa catalog from the same Adobe Commerce (Catalog Service) GraphQL

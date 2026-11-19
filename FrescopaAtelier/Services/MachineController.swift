@@ -22,10 +22,49 @@ final class MachineController {
     private let service: BrewService
     @ObservationIgnored private var task: Task<Void, Never>?
 
-    init(service: BrewService, levels: Machine.Levels = .init(water: 0.72, beans: 0.18, filter: 0.60)) {
+    /// Maintenance schedule (descale, filter, milk rinse). Shared by Home's Care and Account.
+    private(set) var care: [CareTask]
+
+    init(service: BrewService,
+         levels: Machine.Levels = .init(water: 0.72, beans: 0.18, filter: 0.60),
+         care: [CareTask] = MockAccountService.sample(now: .now).machine.care) {
         self.service = service
         self.levels = levels
+        self.care = care
     }
+
+    enum Supply { case water, filter }
+
+    /// The customer refilled the tank or fitted a new filter cartridge.
+    func refill(_ supply: Supply) {
+        switch supply {
+        case .water: levels.water = 1
+        case .filter: levels.filter = 1
+        }
+    }
+
+    /// Marks a maintenance routine as done and resets its countdown.
+    func completeCare(_ id: CareTask.ID) {
+        guard let index = care.firstIndex(where: { $0.id == id }) else { return }
+        care[index].remaining = 1
+        care[index].dueIn = switch id {
+        case "descale": "Done today · next in ~8 weeks"
+        case "filter": "New cartridge · ~2 months left"
+        default: "Rinsed just now"
+        }
+        if id == "filter" { levels.filter = 1 }
+    }
+
+    /// Overall machine health, 0...1: the weakest of levels and care, softened by the average.
+    var health: Double {
+        let values = [levels.water, levels.filter] + care.map(\.remaining)
+        let weakest = values.min() ?? 1
+        let average = values.reduce(0, +) / Double(max(values.count, 1))
+        return min(max(weakest * 0.5 + average * 0.5, 0), 1)
+    }
+
+    /// The most urgent care task, if any is due soon.
+    var urgentCare: CareTask? { care.filter(\.isDueSoon).min { $0.remaining < $1.remaining } }
 
     var isBrewing: Bool {
         if case .brewing = phase { return true }
