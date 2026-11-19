@@ -19,9 +19,10 @@ struct ProductDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                ProductImage(product: product, width: 900)
-                    .frame(height: 300)
+                Color.clear
                     .frame(maxWidth: .infinity)
+                    .frame(height: 300)
+                    .overlay { ProductImage(product: product, width: 900) }
                     .clipShape(RoundedRectangle(cornerRadius: Radius.xl, style: .continuous))
                     .padding(.horizontal, Spacing.screenInset)
                     .padding(.top, 8)

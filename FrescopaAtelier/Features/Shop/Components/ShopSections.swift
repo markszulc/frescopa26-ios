@@ -198,9 +198,11 @@ struct ProductTile: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ProductImage(product: product, width: 500)
-                .frame(height: 150)
+            // The box sets the size; the photo is an overlay so an aspect-filled image can't widen the tile.
+            Color.clear
                 .frame(maxWidth: .infinity)
+                .frame(height: 150)
+                .overlay { ProductImage(product: product, width: 500) }
                 .clipped()
                 .overlay(alignment: .topLeading) {
                     if !product.inStock {
