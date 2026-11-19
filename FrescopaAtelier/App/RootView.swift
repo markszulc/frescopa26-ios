@@ -77,14 +77,43 @@ struct RootView: View {
 }
 
 /// Paper-tinted blur behind the system status bar (the design's 54pt status strip).
+/// Soft edge behind the system status bar: solid enough under the clock to stay legible,
+/// then blur and paper tint ease out so scrolling content dissolves instead of being cut off.
 private struct StatusBarScrim: View {
+    /// How far below the status bar the fade extends.
+    var fade: CGFloat = 32
+
     var body: some View {
         GeometryReader { proxy in
-            Rectangle()
-                .fill(.ultraThinMaterial)
-                .overlay(Color.paper.opacity(0.85))
-                .frame(height: proxy.safeAreaInsets.top)
-                .ignoresSafeArea(edges: .top)
+            let top = proxy.safeAreaInsets.top
+            let height = top + fade
+            // Fully opaque through ~80% of the status bar, transparent at the bottom of the fade.
+            let solidUntil = (top * 0.8) / max(height, 1)
+
+            ZStack {
+                Rectangle().fill(.ultraThinMaterial)
+                LinearGradient(
+                    stops: [
+                        .init(color: Color.paper.opacity(0.94), location: 0),
+                        .init(color: Color.paper.opacity(0.85), location: solidUntil),
+                        .init(color: Color.paper.opacity(0.0), location: 1),
+                    ],
+                    startPoint: .top, endPoint: .bottom
+                )
+            }
+            .frame(height: height)
+            .mask {
+                LinearGradient(
+                    stops: [
+                        .init(color: .black, location: 0),
+                        .init(color: .black, location: solidUntil),
+                        .init(color: .black.opacity(0.6), location: solidUntil + (1 - solidUntil) * 0.45),
+                        .init(color: .clear, location: 1),
+                    ],
+                    startPoint: .top, endPoint: .bottom
+                )
+            }
+            .ignoresSafeArea(edges: .top)
         }
         .allowsHitTesting(false)
         .accessibilityHidden(true)
