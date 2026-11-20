@@ -71,6 +71,7 @@ struct BrewView: View {
 
             SavedRecipesRail(
                 recipes: menu.recipes,
+                isUnavailable: menu.recipesUnavailable,
                 drinkName: { menu.drink($0.drinkID)?.name ?? "" },
                 summary: { recipe in model.order(for: recipe).map(model.summary(for:)) ?? "" },
                 isBrewing: model.machine.isBrewing,

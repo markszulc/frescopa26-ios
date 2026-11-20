@@ -24,8 +24,8 @@ struct AppServices: Sendable {
     var account: AccountService
     var shop: ShopService
 
-    /// Mock data everywhere except the shop, which reads the live Fréscopa Commerce catalog.
+    /// Mock data except the live Fréscopa Commerce catalog (Shop) and AEM recipes (Brew).
     static let mock = AppServices(home: MockHomeService(), cafes: MockCafeService(),
-                                  brew: MockBrewService(), account: MockAccountService(),
+                                  brew: AEMRecipesBrewService(base: MockBrewService()), account: MockAccountService(),
                                   shop: CommerceShopService())
 }

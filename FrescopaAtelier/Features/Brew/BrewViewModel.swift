@@ -64,7 +64,8 @@ final class BrewViewModel {
 
     func order(for recipe: BrewRecipe) -> BrewOrder? {
         guard let drink = menu?.drink(recipe.drinkID) else { return nil }
-        return BrewOrder(drink: drink, settings: recipe.settings, recipeName: recipe.name)
+        return BrewOrder(drink: drink, settings: recipe.settings, recipeName: recipe.name,
+                         recipeDescription: recipe.description)
     }
 
     func summary(for order: BrewOrder) -> String {
@@ -82,7 +83,7 @@ final class BrewViewModel {
     func customize(_ order: BrewOrder) {
         guard let menu else { return }
         customizing = DrinkCustomizerModel(drink: order.drink, settings: order.settings, beans: menu.beans,
-                                           recipeName: order.recipeName)
+                                           recipeName: order.recipeName, recipeDescription: order.recipeDescription)
     }
 
     func customizeUsual() {
@@ -171,12 +172,14 @@ final class DrinkCustomizerModel: Identifiable {
     let beans: [Bean]
     var settings: BrewSettings
     let recipeName: String?
+    let recipeDescription: String?
 
-    init(drink: Drink, settings: BrewSettings, beans: [Bean], recipeName: String? = nil) {
+    init(drink: Drink, settings: BrewSettings, beans: [Bean], recipeName: String? = nil, recipeDescription: String? = nil) {
         self.drink = drink
         self.settings = settings
         self.beans = beans
         self.recipeName = recipeName
+        self.recipeDescription = recipeDescription
     }
 
     /// Tea uses leaf hoppers; coffee drinks use bean hoppers.
@@ -192,7 +195,7 @@ final class DrinkCustomizerModel: Identifiable {
 
     var taste: TastePrediction { TastePrediction(settings: settings, drink: drink, bean: selectedBean) }
 
-    var order: BrewOrder { BrewOrder(drink: drink, settings: settings, recipeName: recipeName) }
+    var order: BrewOrder { BrewOrder(drink: drink, settings: settings, recipeName: recipeName, recipeDescription: recipeDescription) }
 
     var volumeLabel: String { "\(order.volumeML) ml" }
 

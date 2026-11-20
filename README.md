@@ -84,6 +84,16 @@ through `BrewService.brew(_:)`, an `AsyncThrowingStream` of stage progress; canc
 5. `RecentOrdersSection`, `AccountSettingsSection` — notification toggles, settings links, sign out
 6. Confirmations use the shared `ToastView`, shown by `RootView` above the tab bar
 
+#### Recipes from AEM
+
+"Your recipes" comes from the AEM persisted query
+`https://publish-p137825-e1511252.adobeaemcloud.com/graphql/execute.json/frescopa/RecipeList`
+(Recipe Content Fragments). `AEMRecipesBrewService` wraps the brew service and `RecipeMapper` maps each
+fragment onto the menu: `drinkStyle` → existing drink (or a recipe-only drink such as the espresso
+martini, kept out of the menu grid), `beanName` → bean, plus size, dose, temperatures and milk.
+If the feed can't be reached the rail says so and the rest of the tab keeps working. Recipes saved in
+the app stay on-device. Run `LiveAEMRecipeTests` with `LIVE_AEM=1` to hit the real endpoint.
+
 ### Cafés tab → components
 
 Content and functions adapted from frescopacoffee.com/cafe.

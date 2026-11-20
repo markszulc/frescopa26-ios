@@ -116,16 +116,30 @@ struct Drink: Identifiable, Equatable, Hashable, Sendable {
 
 /// A named set of settings the customer saved.
 struct BrewRecipe: Identifiable, Equatable, Hashable, Sendable {
+    enum Source: Hashable, Sendable { case local, aem }
+
     var id: String
     var name: String
     var drinkID: Drink.ID
     var settings: BrewSettings
+    /// Editorial blurb (from AEM recipes).
+    var description: String? = nil
+    /// Authored flavour profile, 0...1 each (from AEM recipes).
+    var profile: RecipeProfile? = nil
+    var source: Source = .local
+}
+
+struct RecipeProfile: Hashable, Sendable {
+    var body: Double
+    var sweetness: Double
+    var acidity: Double
 }
 
 struct BrewOrder: Equatable, Sendable {
     var drink: Drink
     var settings: BrewSettings
     var recipeName: String?
+    var recipeDescription: String? = nil
 
     var volumeML: Int { Int((Double(drink.volumeML) * settings.size.multiplier).rounded()) }
     var title: String { recipeName ?? drink.name }
@@ -176,8 +190,12 @@ struct BrewMenu: Equatable, Sendable {
     var usualReason: String
     var recipes: [BrewRecipe]
     var history: [BrewHistoryEntry]
+    /// Drinks that only exist through a recipe (e.g. an espresso martini). Not shown in the menu grid.
+    var recipeDrinks: [Drink] = []
+    /// True when the recipe feed couldn't be reached; recipes saved on-device still show.
+    var recipesUnavailable = false
 
-    func drink(_ id: Drink.ID) -> Drink? { drinks.first { $0.id == id } }
+    func drink(_ id: Drink.ID) -> Drink? { drinks.first { $0.id == id } ?? recipeDrinks.first { $0.id == id } }
     func bean(_ id: Bean.ID) -> Bean? { beans.first { $0.id == id } }
 }
 

@@ -3,6 +3,7 @@ import SwiftUI
 /// "Your recipes" — horizontal rail of saved settings with a one-tap brew.
 struct SavedRecipesRail: View {
     let recipes: [BrewRecipe]
+    var isUnavailable = false
     let drinkName: (BrewRecipe) -> String
     let summary: (BrewRecipe) -> String
     let isBrewing: Bool
@@ -14,7 +15,9 @@ struct SavedRecipesRail: View {
             SectionHeader(title: "Your recipes")
 
             if recipes.isEmpty {
-                Text("Adjust any drink and save it here for next time.")
+                Text(isUnavailable
+                     ? "Fréscopa's recipes couldn't load. Pull down to try again."
+                     : "Adjust any drink and save it here for next time.")
                     .textStyle(.caption)
                     .foregroundStyle(Color.inkSoft)
                     .padding(.horizontal, Spacing.headingInset)
@@ -57,11 +60,19 @@ struct RecipeCard: View {
                 .foregroundStyle(Color.ink)
                 .lineLimit(2, reservesSpace: true)
                 .padding(.top, 5)
-            Text(summary)
+            Text(recipe.description ?? summary)
                 .textStyle(.caption)
                 .foregroundStyle(Color.inkSoft)
-                .lineLimit(2, reservesSpace: true)
+                .lineLimit(3, reservesSpace: true)
                 .padding(.top, 4)
+            if recipe.description != nil {
+                Text(summary)
+                    .font(BrandFont.body(11, weight: .medium, relativeTo: .caption2))
+                    .foregroundStyle(Color.terracottaDeep)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+                    .padding(.top, 8)
+            }
             HStack {
                 Button("Edit", action: onEdit)
                     .font(BrandFont.body(13, weight: .medium, relativeTo: .footnote))
@@ -84,7 +95,7 @@ struct RecipeCard: View {
             .padding(.top, 12)
         }
         .padding(14)
-        .frame(width: 190, alignment: .leading)
+        .frame(width: 210, alignment: .leading)
         .background(RoundedRectangle(cornerRadius: Radius.lg, style: .continuous).fill(Color.paper2))
         .overlay(RoundedRectangle(cornerRadius: Radius.lg, style: .continuous).strokeBorder(Color.line, lineWidth: 1))
     }

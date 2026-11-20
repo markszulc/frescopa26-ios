@@ -116,7 +116,7 @@ struct DrinkCustomizerView: View {
                 .textStyle(.greetingTitle)
                 .foregroundStyle(Color.burgundy)
                 .accessibilityAddTraits(.isHeader)
-            Text(model.drink.summary)
+            Text(model.recipeDescription ?? model.drink.summary)
                 .textStyle(.bodySmall)
                 .foregroundStyle(Color.inkSoft)
                 .fixedSize(horizontal: false, vertical: true)
